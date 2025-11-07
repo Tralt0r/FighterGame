@@ -15,13 +15,16 @@ public class PlayerController : MonoBehaviour
 
     public GameObject bulletPrefab;
     public GameObject explosionPrefab;
+    public float fireRate = 0.005f; // seconds between shots
+    private float nextFireTime = 0f;
+
 
     // Start is called before the first frame update
     void Start()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         lives = 3;
-        speed = 5.0f;
+        speed = 8.0f;
         gameManager.ChangeLivesText(lives);
     }
 
@@ -47,9 +50,10 @@ public class PlayerController : MonoBehaviour
 
     void Shooting()
     {
-        if(Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space) && Time.time >= nextFireTime)
         {
-            Instantiate(bulletPrefab, transform.position + new Vector3(0, 0.5f, 0), Quaternion.identity);
+            Instantiate(bulletPrefab, transform.position + new Vector3(0, 1, 0), Quaternion.identity);
+            nextFireTime = Time.time + fireRate;
         }
     }
 

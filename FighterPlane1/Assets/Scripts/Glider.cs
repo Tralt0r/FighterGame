@@ -4,9 +4,15 @@ using UnityEngine;
 
 public class Glider : MonoBehaviour
 {
-
+    [Header("Movement Settings")]
     public bool goingUp;
+    public bool swingingSideToSide;
+    [Header("Vertical Movement Settings")]
     public float speed;
+    [Header("Horizontal Movement Settings")]
+    public float horizontalspeed;
+    public float horizontalRangeMIN;
+    public float horizontalRangeMAX;
 
     private GameManager gameManager;
 
@@ -22,7 +28,8 @@ public class Glider : MonoBehaviour
         if (goingUp)
         {
             transform.Translate(Vector3.up * speed * Time.deltaTime);
-        } else if (goingUp == false)
+        }
+        else if (goingUp == false)
         {
             transform.Translate(Vector3.down * speed * Time.deltaTime);
         }
@@ -31,5 +38,22 @@ public class Glider : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+        if (swingingSideToSide)
+        {
+            transform.Translate(Vector3.right * horizontalspeed * Time.deltaTime);
+            if (transform.position.x >= horizontalRangeMAX)
+            {
+                swingingSideToSide = false;
+            }
+        }
+        else if (swingingSideToSide == false)
+        {
+            transform.Translate(Vector3.left * horizontalspeed * Time.deltaTime);
+            if (transform.position.x <= horizontalRangeMIN)
+            {
+                swingingSideToSide = true;
+            }
+        }
     }
+    
 }
