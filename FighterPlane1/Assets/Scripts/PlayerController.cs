@@ -18,10 +18,24 @@ public class PlayerController : MonoBehaviour
     public float fireRate = 0.005f; // seconds between shots
     private float nextFireTime = 0f;
 
+    private float minX, maxX, minY, maxY;
+    private Camera cam;
 
     // Start is called before the first frame update
     void Start()
     {
+        cam = Camera.main;
+        Vector3 screenBottomLeft = cam.ViewportToWorldPoint(new Vector3(0, 0, 0));
+        Vector3 screenTopRight = cam.ViewportToWorldPoint(new Vector3(1, 1, 0));
+
+        minX = screenBottomLeft.x;
+        maxX = screenTopRight.x;
+
+        minY = screenBottomLeft.y;
+        maxY = screenTopRight.y;
+
+        maxY = (minY + maxY) / 4f;
+
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         lives = 3;
         speed = 8.0f;
@@ -31,6 +45,16 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        float moveX = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
+        float moveY = Input.GetAxis("Vertical") * speed * Time.deltaTime;
+
+        Vector3 newPos = transform.position + new Vector3(moveX, moveY, 0);
+
+        newPos.x = Mathf.Clamp(newPos.x, minX, maxX);
+        newPos.y = Mathf.Clamp(newPos.y, minY, maxY);
+
+        transform.position = newPos;
+
         Movement();
         Shooting();
     }
