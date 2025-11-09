@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class Player : MonoBehaviour
 {
@@ -14,20 +15,24 @@ public class Player : MonoBehaviour
     public GameObject bulletPrefab;
     public float fireRate = 0.2f; // seconds between shots
     private float nextFireTime = 0f;
+    private bool canfire = true;
 
     void Update()
     {
         Movement();
-        Shooting();
     }
 
     void Shooting()
     {
-        // Continuous fire while holding Space
         if (Input.GetKey(KeyCode.Space) && Time.time >= nextFireTime)
         {
-            Instantiate(bulletPrefab, transform.position + new Vector3(0, 1, 0), Quaternion.identity);
-            nextFireTime = Time.time + fireRate;
+            if (canfire)
+                canfire = false;
+                Instantiate(bulletPrefab, transform.position + new Vector3(0, 1, 0), Quaternion.identity);
+                nextFireTime = Time.time + fireRate;
+                StartCoroutine(DelayedAction(fireRate));
+                canfire = true;
+                Debug.Log("Can Fire Again");
         }
     }
 
@@ -50,4 +55,13 @@ public class Player : MonoBehaviour
             transform.position = new Vector3(transform.position.x, -transform.position.y, 0);
         }
     }
+        IEnumerator DelayedAction(float delayTime)
+    {
+        // Wait for the specified number of seconds (affected by Time.timeScale)
+        yield return new WaitForSeconds(delayTime);
+
+        // This code will execute after the delay
+        Debug.Log("Action performed after delay!");
+    }
+
 }

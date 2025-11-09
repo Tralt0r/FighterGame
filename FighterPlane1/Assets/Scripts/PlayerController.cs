@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -15,11 +16,12 @@ public class PlayerController : MonoBehaviour
 
     public GameObject bulletPrefab;
     public GameObject explosionPrefab;
-    public float fireRate = 0.005f; // seconds between shots
-    private float nextFireTime = 0f;
+    public float fireRate = 1000f; // seconds between shots
+    private float nextFireTime = 0.1f;
 
     private float minX, maxX, minY, maxY;
     private Camera cam;
+    private bool canfire = true;
 
     // Start is called before the first frame update
     void Start()
@@ -40,6 +42,7 @@ public class PlayerController : MonoBehaviour
         lives = 3;
         speed = 8.0f;
         gameManager.ChangeLivesText(lives);
+        Debug.Log("Lives at start: " + lives);
     }
 
     // Update is called once per frame
@@ -76,8 +79,11 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Space) && Time.time >= nextFireTime)
         {
-            Instantiate(bulletPrefab, transform.position + new Vector3(0, 1, 0), Quaternion.identity);
-            nextFireTime = Time.time + fireRate;
+            if (canfire)
+                canfire = false;
+                Instantiate(bulletPrefab, transform.position + new Vector3(0, 1, 0), Quaternion.identity);
+                nextFireTime = Time.time + fireRate;
+                StartCoroutine(DelayedAction(fireRate));
         }
     }
 
@@ -101,4 +107,15 @@ public class PlayerController : MonoBehaviour
         }
 
     }
+
+    IEnumerator DelayedAction(float delayTime)
+    {
+        // Wait for the specified number of seconds (affected by Time.timeScale)
+        yield return new WaitForSeconds(delayTime);
+
+        canfire = true;
+        Debug.Log("Can Fire Again");
+    }
+
+    
 }
