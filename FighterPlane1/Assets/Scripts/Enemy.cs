@@ -18,6 +18,9 @@ public class Enemy : MonoBehaviour
     public GameObject bulletPrefab;
     public List<GameObject> EnemiestoAvoid;
 
+    public int points = 10;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -72,5 +75,13 @@ public class Enemy : MonoBehaviour
         }
 
         canShoot = true;
+    }
+    void OnDestroy()
+    {
+        ScoreManager scoreManager = FindObjectOfType<ScoreManager>();
+        if (scoreManager != null)
+        {
+            scoreManager.AddScore(points);
+        }
     }
 }
