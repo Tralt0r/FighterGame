@@ -78,7 +78,7 @@ public class Enemy : MonoBehaviour
     }
     void OnDestroy()
     {
-        ScoreManager scoreManager = FindObjectOfType<ScoreManager>();
+        ScoreManager scoreManager = UnityEngine.Object.FindFirstObjectByType<ScoreManager>();
         if (scoreManager != null)
         {
             scoreManager.AddScore(points);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Threading.Tasks;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class GameManager : MonoBehaviour
     public GameObject playerPrefab;
     public GameObject enemyOnePrefab;
     public GameObject enemyTwoPrefab;
+    public GameObject coinPrefab;
     public GameObject cloudPrefab;
 
     public TextMeshProUGUI livesText;
@@ -30,6 +32,7 @@ public class GameManager : MonoBehaviour
         CreateSky();
         InvokeRepeating("CreateEnemy1", 1, 3);
         InvokeRepeating("CreateEnemy2", 1, 2);
+        InvokeRepeating("CreateCoins", 4, 2);
     }
 
     // Update is called once per frame
@@ -45,6 +48,12 @@ public class GameManager : MonoBehaviour
     void CreateEnemy2()
     {
         Instantiate(enemyTwoPrefab, new Vector3(Random.Range(-horizontalScreenSize, horizontalScreenSize) * 0.9f, verticalScreenSize, 0), Quaternion.Euler(180, 0, 0));
+    }
+    void CreateCoins()
+    {
+        for (int i = 0; i < 4; i++)
+        Instantiate(coinPrefab, new Vector3(Random.Range(-horizontalScreenSize, horizontalScreenSize) * 0.9f, verticalScreenSize, 0), Quaternion.Euler(180, 0, 0));
+        Task.Delay(500);
     }
 
     void CreateSky()
