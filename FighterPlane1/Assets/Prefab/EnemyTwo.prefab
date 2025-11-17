@@ -205,3 +205,4 @@ MonoBehaviour:
   teamID: 1
   bulletPrefab: {fileID: 8568965665149658710, guid: 0cbe8829e834107458a96338a381aa57, type: 3}
   EnemiestoAvoid: []
+  points: 5
