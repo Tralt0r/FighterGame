@@ -197,6 +197,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ed70b92885deda43a25c386d6b3788d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  soundToPlay: {fileID: 8300000, guid: ec48bc6fd0610e74090bfad745853ad5, type: 3}
   explosionPrefab: {fileID: 1886710396827344234, guid: e8e63456aa1d9d240ab38a0453e59388, type: 3}
   timeShootMIN: 0
   timeShootMAX: 0
@@ -205,3 +206,4 @@ MonoBehaviour:
   teamID: 1
   bulletPrefab: {fileID: 8568965665149658710, guid: 0cbe8829e834107458a96338a381aa57, type: 3}
   EnemiestoAvoid: []
+  points: 10

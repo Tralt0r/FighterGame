@@ -110,8 +110,8 @@ MonoBehaviour:
   swingingSideToSide: 1
   speed: 1
   horizontalspeed: 3
-  horizontalRangeMIN: -4
-  horizontalRangeMAX: 4
+  horizontalRangeMIN: -11
+  horizontalRangeMAX: 11
 --- !u!61 &201179378626213400
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -197,9 +197,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ed70b92885deda43a25c386d6b3788d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  soundToPlay: {fileID: 8300000, guid: ec48bc6fd0610e74090bfad745853ad5, type: 3}
   explosionPrefab: {fileID: 1886710396827344234, guid: e8e63456aa1d9d240ab38a0453e59388, type: 3}
-  timeShootMIN: 0.2
-  timeShootMAX: 0.5
+  timeShootMIN: 0.6
+  timeShootMAX: 0.8
   shootInterval: 0
   canShoot: 1
   teamID: 1

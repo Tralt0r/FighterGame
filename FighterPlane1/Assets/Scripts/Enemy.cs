@@ -6,6 +6,8 @@ using Random = UnityEngine.Random;
 public class Enemy : MonoBehaviour
 {
 
+    public AudioClip soundToPlay;
+    private AudioSource audioSource;
     public GameObject explosionPrefab;
     public float timeShootMIN;
     public float timeShootMAX;
@@ -24,6 +26,7 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        audioSource = GetComponent<AudioSource>(); // FIXED
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
@@ -81,7 +84,23 @@ public class Enemy : MonoBehaviour
         ScoreManager scoreManager = UnityEngine.Object.FindFirstObjectByType<ScoreManager>();
         if (scoreManager != null)
         {
+            PlayOneShotSound(soundToPlay);
             scoreManager.AddScore(points);
         }
+    }
+    public void PlayOneShotSound(AudioClip clip)
+    {
+        if (clip == null)
+        {
+            Debug.LogWarning("Audio clip is missing!");
+            return;
+        }
+
+        // Create a temporary object to play the sound
+        GameObject tempAudio = new GameObject("TempAudio");
+        AudioSource tempAS = tempAudio.AddComponent<AudioSource>();
+        tempAS.clip = clip;
+        tempAS.Play();
+        Destroy(tempAudio, clip.length);
     }
 }

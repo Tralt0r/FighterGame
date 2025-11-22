@@ -13,6 +13,9 @@ public class PlayerController : MonoBehaviour
 
     private float horizontalInput;
     private float verticalInput;
+    public AudioClip soundToPlay;
+    public AudioClip soundToPlay2;
+    private AudioSource audioSource;
 
     public GameObject bulletPrefab;
     public GameObject explosionPrefab;
@@ -26,6 +29,8 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        audioSource = GetComponent<AudioSource>(); // FIXED
+
         cam = Camera.main;
         Vector3 screenBottomLeft = cam.ViewportToWorldPoint(new Vector3(0, 0, 0));
         Vector3 screenTopRight = cam.ViewportToWorldPoint(new Vector3(1, 1, 0));
@@ -40,7 +45,7 @@ public class PlayerController : MonoBehaviour
 
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         lives = 3;
-        speed = 8.0f;
+        speed = 9.0f;
         gameManager.ChangeLivesText(lives);
         Debug.Log("Lives at start: " + lives);
     }
@@ -79,12 +84,57 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Space) && Time.time >= nextFireTime)
         {
-            if (canfire)
-                canfire = false;
-                Instantiate(bulletPrefab, transform.position + new Vector3(0, 1, 0), Quaternion.identity);
-                nextFireTime = Time.time + fireRate;
-                StartCoroutine(DelayedAction(fireRate));
+            if (!canfire) return;
+            canfire = false;
+
+            if (tripleShotActive)
+            {
+                // Triple spread fire
+                FireBullet(0f);
+                FireBullet(-15f);
+                FireBullet(15f);
+                FireBullet(-30f);
+                FireBullet(30f);
+            }
+            else
+            {
+                // Normal single bullet
+                FireBullet(0f);
+            }
+
+            PlayOneShotSound(soundToPlay);
+
+            nextFireTime = Time.time + fireRate;
+            StartCoroutine(DelayedAction(fireRate));
         }
+    }
+
+
+    bool tripleShotActive = false;
+
+    void FireBullet(float angle)
+    {
+        // Starting position slightly in front of the player
+        Vector3 spawnPos = transform.position + new Vector3(0, 1f, 0);
+
+        // Create the bullet
+        GameObject bullet = Instantiate(bulletPrefab, spawnPos, Quaternion.identity);
+
+        // Rotate it
+        bullet.transform.rotation = Quaternion.Euler(0, 0, angle);
+    }
+
+    public void ActivateTripleShot()
+    {
+        tripleShotActive = true;
+        StartCoroutine(TripleShotTimer());
+    }
+
+    IEnumerator TripleShotTimer()
+    {
+        yield return new WaitForSeconds(5f);
+        PlayOneShotSound(soundToPlay2);
+        tripleShotActive = false;
     }
 
     void Movement()
@@ -117,5 +167,19 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Can Fire Again");
     }
 
-    
+    public void PlayOneShotSound(AudioClip clip)
+    {
+        if (clip == null)
+        {
+            Debug.LogWarning("Audio clip is missing!");
+            return;
+        }
+
+        // Create a temporary object to play the sound
+        GameObject tempAudio = new GameObject("TempAudio");
+        AudioSource tempAS = tempAudio.AddComponent<AudioSource>();
+        tempAS.clip = clip;
+        tempAS.Play();
+        Destroy(tempAudio, clip.length);
+    }
 }

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Threading.Tasks;
 
+
 public class GameManager : MonoBehaviour
 {
 
@@ -13,6 +14,8 @@ public class GameManager : MonoBehaviour
     public GameObject enemyTwoPrefab;
     public GameObject coinPrefab;
     public GameObject cloudPrefab;
+    public GameObject shieldPrefab;
+    public GameObject powerUpPrefab;
 
     public TextMeshProUGUI livesText;
 
@@ -30,9 +33,11 @@ public class GameManager : MonoBehaviour
         score = 0;
         Instantiate(playerPrefab, transform.position, Quaternion.identity);
         CreateSky();
-        InvokeRepeating("CreateEnemy1", 1, 3);
-        InvokeRepeating("CreateEnemy2", 1, 2);
+        InvokeRepeating("CreateEnemy1", 1, 2);
+        InvokeRepeating("CreateEnemy2", 1, 0.5f);
         InvokeRepeating("CreateCoins", 4, 2);
+        InvokeRepeating("CreateShield", 30, 60);
+        InvokeRepeating("CreatePowerUp", 1, 45);
     }
 
     // Update is called once per frame
@@ -54,6 +59,15 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < 4; i++)
         Instantiate(coinPrefab, new Vector3(Random.Range(-horizontalScreenSize, horizontalScreenSize) * 0.9f, verticalScreenSize, 0), Quaternion.Euler(180, 0, 0));
         Task.Delay(500);
+    }
+    void CreateShield()
+    {
+
+        Instantiate(shieldPrefab, new Vector3(Random.Range(-horizontalScreenSize, horizontalScreenSize) * 0.9f, verticalScreenSize, 0), Quaternion.Euler(180, 0, 0));
+    }
+    void CreatePowerUp()
+    {
+        Instantiate(powerUpPrefab, new Vector3(Random.Range(-horizontalScreenSize, horizontalScreenSize) * 0.9f, verticalScreenSize, 0), Quaternion.Euler(180, 0, 0));
     }
 
     void CreateSky()
