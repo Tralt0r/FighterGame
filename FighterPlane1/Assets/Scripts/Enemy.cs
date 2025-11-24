@@ -6,8 +6,7 @@ using Random = UnityEngine.Random;
 public class Enemy : MonoBehaviour
 {
 
-    public AudioClip soundToPlay;
-    private AudioSource audioSource;
+
     public GameObject explosionPrefab;
     public float timeShootMIN;
     public float timeShootMAX;
@@ -26,7 +25,7 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        audioSource = GetComponent<AudioSource>(); // FIXED
+        
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
@@ -42,10 +41,15 @@ public class Enemy : MonoBehaviour
          }
     }
 
+    private bool isDead = false;
+
     private void OnTriggerEnter2D(Collider2D whatDidIHit)
     {
+        if (isDead) return; // prevent multiple triggers
+
         if (whatDidIHit.CompareTag("Player"))
         {
+            isDead = true;
             whatDidIHit.GetComponent<PlayerController>().LoseALife();
             Instantiate(explosionPrefab, transform.position, Quaternion.identity);
             Destroy(gameObject);
@@ -54,19 +58,16 @@ public class Enemy : MonoBehaviour
         {
             BulletOwner bulletOwner = whatDidIHit.GetComponent<BulletOwner>();
 
-            // Ignore bullets from same team
-            if (bulletOwner != null && bulletOwner.teamID == teamID)
-            {
-                return; // skip friendly fire
-            }
+            if (bulletOwner != null && bulletOwner.teamID == teamID) return;
 
+            isDead = true;
             Destroy(whatDidIHit.gameObject);
             Instantiate(explosionPrefab, transform.position, Quaternion.identity);
             gameManager.AddScore(5);
             Destroy(gameObject);
         }
-
     }
+
     
     void Shoot()
     {
@@ -84,23 +85,8 @@ public class Enemy : MonoBehaviour
         ScoreManager scoreManager = UnityEngine.Object.FindFirstObjectByType<ScoreManager>();
         if (scoreManager != null)
         {
-            PlayOneShotSound(soundToPlay);
             scoreManager.AddScore(points);
         }
     }
-    public void PlayOneShotSound(AudioClip clip)
-    {
-        if (clip == null)
-        {
-            Debug.LogWarning("Audio clip is missing!");
-            return;
-        }
 
-        // Create a temporary object to play the sound
-        GameObject tempAudio = new GameObject("TempAudio");
-        AudioSource tempAS = tempAudio.AddComponent<AudioSource>();
-        tempAS.clip = clip;
-        tempAS.Play();
-        Destroy(tempAudio, clip.length);
-    }
 }

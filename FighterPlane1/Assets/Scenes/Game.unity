@@ -156,6 +156,7 @@ MonoBehaviour:
   cloudPrefab: {fileID: 8901978872678414076, guid: 14dd4fa52784c904e83c0650f3eea560, type: 3}
   shieldPrefab: {fileID: 8729755512266785908, guid: bebf8885be360eb42a724352a05ac1d7, type: 3}
   powerUpPrefab: {fileID: 8729755512266785908, guid: 37e99f00e88535a48b914b7de63fe040, type: 3}
+  lifePrefab: {fileID: 8729755512266785908, guid: 8669555329fe4a149a581f2e6076401f, type: 3}
   livesText: {fileID: 999943548}
   horizontalScreenSize: 0
   verticalScreenSize: 0

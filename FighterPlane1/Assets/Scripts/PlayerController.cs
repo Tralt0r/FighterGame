@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
+
+
 public class PlayerController : MonoBehaviour
 {
 
     public int lives;
     private float speed;
 
-    private GameManager gameManager;
+    public GameManager gameManager;
 
     private float horizontalInput;
     private float verticalInput;
@@ -69,14 +71,19 @@ public class PlayerController : MonoBehaviour
 
     public void LoseALife()
     {
-        //lives = lives - 1;
-        //lives -= 1;
-        lives--;
-        gameManager.ChangeLivesText(lives);
-        if (lives == 0)
+        // Decrease lives but never below 0
+        if (lives > 0)
         {
-            Instantiate(explosionPrefab, transform.position, Quaternion.identity);
-            Destroy(this.gameObject);
+            lives--;
+            gameManager.ChangeLivesText(lives);
+
+            // Check if player is dead
+            if (lives == 0)
+            {
+                Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+                gameManager.StartCoroutine(gameManager.DeathResetTimer());
+                this.gameObject.SetActive(false);
+            }
         }
     }
 

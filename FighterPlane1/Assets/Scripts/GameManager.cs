@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Threading.Tasks;
+using UnityEngine.SceneManagement;
 
 
 public class GameManager : MonoBehaviour
@@ -16,6 +17,7 @@ public class GameManager : MonoBehaviour
     public GameObject cloudPrefab;
     public GameObject shieldPrefab;
     public GameObject powerUpPrefab;
+    public GameObject lifePrefab;
 
     public TextMeshProUGUI livesText;
 
@@ -38,6 +40,7 @@ public class GameManager : MonoBehaviour
         InvokeRepeating("CreateCoins", 4, 2);
         InvokeRepeating("CreateShield", 30, 60);
         InvokeRepeating("CreatePowerUp", 1, 45);
+        InvokeRepeating("CreateLife", 1, 45);
     }
 
     // Update is called once per frame
@@ -69,7 +72,10 @@ public class GameManager : MonoBehaviour
     {
         Instantiate(powerUpPrefab, new Vector3(Random.Range(-horizontalScreenSize, horizontalScreenSize) * 0.9f, verticalScreenSize, 0), Quaternion.Euler(180, 0, 0));
     }
-
+    void CreateLife()
+    {
+        Instantiate(lifePrefab, new Vector3(Random.Range(-horizontalScreenSize, horizontalScreenSize) * 0.9f, verticalScreenSize, 0), Quaternion.Euler(180, 0, 0));
+    }
     void CreateSky()
     {
         for (int i = 0; i < 30; i++)
@@ -86,5 +92,11 @@ public class GameManager : MonoBehaviour
     public void ChangeLivesText (int currentLives)
     {
         livesText.text = "Lives: " + currentLives;
+    }
+
+    public IEnumerator DeathResetTimer()
+    {
+        yield return new WaitForSeconds(3f);
+        SceneManager.LoadScene("Game");
     }
 }
